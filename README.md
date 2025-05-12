@@ -32,4 +32,4 @@ After every selection process, all the issues with submissions that didn't get a
 
 ### I have other questions...
 
-Email any other questions you may have to Arliss at NumFOCUS.
+Email any other questions you may have to [Arliss](arliss@numfocus.org) at NumFOCUS.
