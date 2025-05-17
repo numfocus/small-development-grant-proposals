@@ -54,7 +54,10 @@ flowchart TD
 
 ### Can I resubmit the same proposal if it hasn't been awarded?
 
-After every selection process, all the issues with submissions that didn't get awarded will be closed.  You will be able to open a new issue and copy&paste the content from the previous round.
+After every selection process, all the issues with submissions that didn't get funded will be closed (as `rejected`).  You will be able to open a new issue (using the "Resubmit a previous proposal" template) and refer to the previous issue number and add any required updates.
+
+Issues are closed as the project may not be valid anymore due to date or other constraints. This helps keeping the list of issues as lean as possible.
+
 
 ### I have other questions...
 
