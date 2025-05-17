@@ -24,7 +24,7 @@ The committee will select one proposal per round based on their merits that will
 
 #### Can I see the randomisation script?
 
-Yes! we are testing the interface and will put the script in this repository. The execution of the script will happen using github actions.
+Yes! The [script is available in this repository](./scripts/project_selection.py). The execution of the script will happen using github actions (this is still working on progress)
 
 ### How will be GitHub used to manage the projects?
 
