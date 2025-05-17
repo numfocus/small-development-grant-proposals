@@ -11,7 +11,7 @@ def select_proposals_to_fund(budget, funding_limit, proposals):
     `proposals` is a list of tuples of the form `(name, requested_amount, previous_funding)`
     where `name` is the name of the proposal, `requested_amount` is the amount of funding
     that proposal requests and `previos_funding` is the amount of funding the project
-    associated with that proposal has recieved that year.
+    associated with that proposal has received that year.
 
     This function will throw and not produce any results if any of its inputs are invalid.
     """
@@ -20,7 +20,7 @@ def select_proposals_to_fund(budget, funding_limit, proposals):
         if len(p) != 3:
             raise ValueError("Malformed proposal")
         if p[1]+p[2] > funding_limit:
-            raise ValueError('If proposal "' + str(p[0]) + '" were funded it would recieve more than the funding limit this year.')
+            raise ValueError(f'If proposal "{p[0]}" were funded it would receive more than the funding limit this year.')
 
     names = [str(p[0]) for p in proposals]
     weights = [(funding_limit-p[2])/p[1] for p in proposals]
@@ -44,21 +44,21 @@ def select_proposals_to_fund(budget, funding_limit, proposals):
             funded.append(proposal)
 
     print("Inputs:")
-    print("Budget: $", budget, sep='')
-    print("Per-project funding limit: $", funding_limit, sep='')
+    print(f"Budget: ${budget}")
+    print(f"Per-project funding limit: ${funding_limit}")
     print("Proposals in the drawing:")
     for p in proposals:
-            print('"', p[0], '" requests $', p[1], " and is proposed by a project that has previously recieved $", p[2], " this year.", sep='')
+            print(f'"{p[0]}" requests ${p[1]} and is proposed by a project that has previously received ${p[2]} this year.')
 
 
     print()
     print("Random Outputs:")
-    print("Allocated: $", budget-budget_remaining, " ($", abs(budget_remaining), " ", "over" if budget_remaining < 0 else "under", " budget)", sep='')
-    print(len(funded), "propsals funded out of", len(proposals), "total proposals in the drawing")
+    print(f"Allocated: ${budget-budget_remaining} (${abs(budget_remaining)} {"over" if budget_remaining < 0 else "under"} budget)")
+    print(f"{len(funded)} proposals funded out of {len(proposals)} total proposals in the drawing")
     print()
     print("Funded the following projects")
 
     for p in funded:
-        print('Fund "', p[0], '" for $', p[1], " bringing its project's annual total to $", p[1]+p[2], ".", sep='')
+        print(f"Fund \"{p[0]}\" for ${p[1]} bringing its project's annual total to ${p[1]+p[2]}.")
 
     return [f[0] for f in funded]
