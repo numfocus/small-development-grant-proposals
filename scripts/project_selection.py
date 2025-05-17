@@ -33,15 +33,20 @@ def select_proposals_to_fund(budget, funding_limit, proposals):
 
     funded = []
     budget_remaining = budget
+    temp_budget_remaining = budget + 0
     while budget_remaining > 0 and len(funded) < len(proposals):
         total_weight = sum(weights)
+        if total_weight == 0:
+            # When all the proposals have been evaluated and there's still budget
+            break
         i = np.random.choice(range(len(weights)), p=[w/total_weight for w in weights])
         weights[i] = 0
         proposal = proposals[i]
         proposal_budget = proposal[1]
-        budget_remaining -= proposal_budget
-        if budget_remaining > -proposal_budget/2:
+        temp_budget_remaining -= proposal_budget
+        if temp_budget_remaining > -proposal_budget/2:
             funded.append(proposal)
+            budget_remaining = temp_budget_remaining
 
     print("Inputs:")
     print(f"Budget: ${budget}")
@@ -53,7 +58,7 @@ def select_proposals_to_fund(budget, funding_limit, proposals):
 
     print()
     print("Random Outputs:")
-    print(f"Allocated: ${budget-budget_remaining} (${abs(budget_remaining)} {"over" if budget_remaining < 0 else "under"} budget)")
+    print(f"Allocated: ${round(budget-budget_remaining, 2)} (${round(abs(budget_remaining),2)} {"over" if budget_remaining < 0 else "under"} budget)")
     print(f"{len(funded)} proposals funded out of {len(proposals)} total proposals in the drawing")
     print()
     print("Funded the following projects")
