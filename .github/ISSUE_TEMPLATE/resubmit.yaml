@@ -1,0 +1,62 @@
+---
+name: Resubmit previous proposal
+description: >-
+  Provide required information for a Small Development Grant submission.
+labels:
+  - Awaiting approval
+body:
+  - id: instructions
+    type: markdown
+    attributes:
+      value: |+
+        Follow the indications as required to submit a Small Development Grant submission.
+        Notice that a project lead has to approve the submission.
+        > [!CAUTION]
+        > This is a form for only [sponsored](https://numfocus.org/sponsored-projects) and [affiliated](https://numfocus.org/sponsored-projects/affiliated-projects) NumFOCUS projects 
+        > that haven't been selected on a previous round.
+        > Remember, each project has a limit of one proposal per round.
+  - id: project
+    type: input
+    attributes:
+      label: Project
+      description: Which project is this proposal for? Comma separate them if this is a collaboration between different projects.
+    validations:
+      required: true
+  - id: previous
+    type: input
+    attributes:
+      label: Issue number of the not funded project from previous round
+    validations:
+      required: true
+  - id: submitter
+    type: input
+    attributes:
+      label: submitter
+      description: Who is submitting this request
+      placeholder: "First name & Last name"
+    validations:
+      required: true
+  - id: lead
+    type: input
+    attributes:
+      label: project lead
+      description: "Who is the project lead that can approve this proposal (github username)"
+      placeholder: "@github_username"
+    validations:
+      required: true
+  - id: amount
+    type: input
+    attributes:
+      label: Amount requested
+      description: How much money is required to execute this proposal
+      placeholder: "1000"
+    validations:
+      required: true
+  - id: update
+    type: textarea
+    attributes:
+      label: Any further updates to the previous proposal
+      description: >-
+        What things need to be updated?
+    validations:
+      required: true
