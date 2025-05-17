@@ -26,6 +26,32 @@ The committee will select one proposal per round based on their merits that will
 
 Yes! we are testing the interface and will put the script in this repository. The execution of the script will happen using github actions.
 
+### How will be GitHub used to manage the projects?
+
+Project proposals will be received as issues. These issues will be originally labelled as `Awaiting approval` till project leads confirm it's real (NumFOCUS will contact them in case they've not reacted). Proposals that aren't confirmed will be closed as `rejected` and labelled as `spam`. Everything else will be labelled as `YYYY-RX` (where `YYYY` is the year, and `RX` will be the selected round in that year - e.g., `2025R1`)
+
+The proposals received will be distributed across the SDG committee. They will review the proposals and check for appropriateness. They may ask for clarification on the issue if required. If the proposal is not considered appropriate, they will be labelled as `non-appropriate` and closed as `rejected`. Between all the appropriate proposals, the SDG committee will select one proposal that will be awarded directly (labelled as `award`). The rest will be put in the randomisation script.
+
+The randomisation script will select projects till the funds are exhausted. The ones that hasn't been selected will be closed as `rejected`. All selected and awarded projects will be labelled as `funded`. Issues will be kept open to record the project progress and it will be closed as `completed` when the project is done.
+
+This flowchart explains the above in a graphical manner:
+
+```mermaid
+flowchart TD
+    A[proposal submited] -->|label 'awaiting approval'| B{Project leeds confirm}
+    B --> |remove 'awaiting approval'; label 'YYYYRX'| C{Review by SDG}
+    B --> |label: 'spam'| D[issue: closed - 'rejected']
+    C -->|appropriate| E{considered for award}
+    C -->|label: 'non-appropriate'| F[issue: closed - 'rejected']
+    E -->|random| G{Included on randomisation}
+    E -->|label: 'award'| H[Removed from random]
+    G --> I[selected]
+    G --> J[No selected - issue:closed - 'rejected']
+    I --> |label: 'funded'| K[Project development - issue updated with progress]
+    H --> |label: 'funded'| K
+    K --> L[Project completed - issue:closed - 'completed']
+```
+
 ### Can I resubmit the same proposal if it hasn't been awarded?
 
 After every selection process, all the issues with submissions that didn't get awarded will be closed.  You will be able to open a new issue and copy&paste the content from the previous round.
