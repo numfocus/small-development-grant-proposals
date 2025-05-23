@@ -26,7 +26,7 @@ body:
     type: input
     attributes:
       label: Summary
-      description: Two-sentece summary
+      description: Two-sentence summary
     validations:
       required: true
   - id: submitter
