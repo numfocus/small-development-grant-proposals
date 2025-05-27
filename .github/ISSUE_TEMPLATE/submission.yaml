@@ -1,47 +1,47 @@
 ---
-name: New SDG submission
+name: New SDG proposal
 description: >-
-  Provide required information for a Small Development Grant submission.
+  Provide the required information for a new Small Development Grant proposal.
 labels:
   - Awaiting approval
 body:
   - id: instructions
     type: markdown
     attributes:
-      value: |+
-        Follow the indications as required to submit a Small Development Grant submission.  
-        Notice that a project lead has to approve the submission.
-        > [!CAUTION]
-        > This is a form for only [sponsored](https://numfocus.org/sponsored-projects) and [affiliated](https://numfocus.org/sponsored-projects/affiliated-projects) NumFOCUS projects 
+      value: |
+        Complete the below fields to submit a Small Development Grant proposal.
+        Note that a project lead has to approve the proposal submission.
+        > [!IMPORTANT]
+        > This form is only for NumFOCUS [sponsored](https://numfocus.org/sponsored-projects) and [affiliated](https://numfocus.org/sponsored-projects/affiliated-projects) projects.
         > Discuss the proposal with the project leads before submitting this issue.
         > Each project has a limit of one proposal per round.
   - id: project
     type: input
     attributes:
       label: Project
-      description: Which project is this proposal for? Comma separate them if this is a collaboration between different projects.
+      description: "Which NumFOCUS project is this proposal for (comma separate the names if a collaboration between multiple projects)"
     validations:
       required: true
   - id: summary
     type: input
     attributes:
       label: Summary
-      description: Two-sentece summary
+      description: "Two-sentence summary of the proposal"
     validations:
       required: true
   - id: submitter
     type: input
     attributes:
-      label: submitter
-      description: Who is submitting this request
-      placeholder: "First name & Last name"
+      label: Submitter
+      description: "Who is submitting this request"
+      placeholder: "Full name"
     validations:
       required: true
   - id: lead
     type: input
     attributes:
-      label: project lead
-      description: "Who is the project lead that can approve this proposal (github username)"
+      label: Project lead
+      description: "Who is the project lead that can approve this proposal (GitHub username)"
       placeholder: "@github_username"
     validations:
       required: true
@@ -49,15 +49,14 @@ body:
     type: textarea
     attributes:
       label: Community benefit
-      description: >-
-        What will be the imapct to the community if this project gets funded
+      description: "How will this proposal positively impact the community"
     validations:
       required: true
   - id: amount
     type: input
     attributes:
       label: Amount requested
-      description: How much money is required to execute this proposal
+      description: "How much money is required to execute this proposal (max $10k)"
       placeholder: "1000"
     validations:
       required: true
@@ -65,7 +64,6 @@ body:
     type: textarea
     attributes:
       label: Execution plan
-      description: >-
-        "Who will implement this, what's the timeline, how will it be done"
+      description: "Who will implement this, what's the timeline, and how will it be carried out"
     validations:
       required: true
