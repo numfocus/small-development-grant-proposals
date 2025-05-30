@@ -50,7 +50,7 @@ body:
     attributes:
       label: Community benefit
       description: >-
-        What will be the imapct to the community if this project gets funded
+        What will be the impact to the community if this project gets funded
     validations:
       required: true
   - id: amount
