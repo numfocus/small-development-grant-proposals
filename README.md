@@ -39,7 +39,7 @@ This flowchart explains the above in a graphical manner:
 ```mermaid
 flowchart TD
     A[proposal submited] -->|label 'awaiting approval'| B{Project leeds confirm}
-    B --> |remove 'awaiting approval'; label 'YYYYRX'| C{Review by SDG}
+    B --> |remove 'awaiting approval'; label 'YYYY-RX'| C{Review by SDG}
     B --> |label: 'spam'| D[issue: closed - 'rejected']
     C -->|appropriate| E{considered for award}
     C -->|label: 'non-appropriate'| F[issue: closed - 'rejected']
