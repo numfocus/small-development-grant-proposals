@@ -1,6 +1,8 @@
 # Small Development Grant Proposals
 
-This repository is the new interface to submit your proposals for the NumFOCUS Small Development Grants (SDG) program.
+This repository is the new interface to submit your proposals for the NumFOCUS Small Development Grants (SDG) program. 
+
+For the instructions about the execution of the scripts check [instructions.md](./instructions.md).
 
 ## How does the SDG program work?
 
@@ -38,7 +40,7 @@ This flowchart explains the above in a graphical manner:
 
 ```mermaid
 flowchart TD
-    A[proposal submited] -->|label 'awaiting approval'| B{Project leeds confirm}
+    A[proposal submited] -->|label 'awaiting approval'| B{Project leads confirm}
     B --> |remove 'awaiting approval'; label 'YYYY-RX'| C{Review by SDG}
     B --> |label: 'spam'| D[issue: closed - 'rejected']
     C -->|appropriate| E{considered for award}

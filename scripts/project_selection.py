@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def select_proposals_to_fund(budget, funding_limit, proposals):
+def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
     """
     Randomly selects which proposals to fund in a round.
 
@@ -16,6 +16,8 @@ def select_proposals_to_fund(budget, funding_limit, proposals):
 
     This function will throw and not produce any results if any of its inputs are invalid.
     """
+
+    np.random.seed(seed)
 
     for p in proposals:
         if len(p) != 3:
