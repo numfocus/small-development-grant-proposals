@@ -84,24 +84,46 @@ def distribute_proposals(proposals, seed, reviews_per_proposal):
             if len(assignments[reviewer]) >= proposals_per_reviewer:
                 reviewers_left.remove(reviewer)
 
+    # Who has been assigned to each proposal?
+    projects = {}
+    for p in proposals:
+        projects[p] = who_is_reviewing(p)
+
     # How many proposals was each reviewer assigned?
     # Sometimes 1-2 reviewers are under-assigned. Can re-run
     # until a good split is achieved, or rebalance manually,
     # or leave as-is.
+
+    # is it unbalanced?
+    projects_count = [(k,len(v)) for k,v in projects.items()]
+    # sorted list of reviewers, to assign projects to the ones with less number
+    reviewers_count = sorted([(k, len(v)) for k,v in assignments.items()], key=lambda x: x[1])
+
+    for proj, proj_count in projects_count:
+        if proj_count < reviews_per_proposal:
+            print(f"Unbalanced found for {proj}")
+            # try to assign it to someone
+            for rev, rev_count in reviewers_count:
+                if proj not in assignments[rev] and not has_conflict(rev, proj):
+                    assignments[rev].append(proj)
+                    print(f"{rev} has been assigned {proj}")
+                    break
+
     print([f"{r}: {len(assignments[r])}" for r in reviewers])
-
-    # Who has been assigned to each proposal?
-    for p in proposals:
-        print(f"{p}: {who_is_reviewing(p)}")
-
-    # Which proposals was each person assigned?
-    for r in assignments:
-        print(r)
-        print("  " + "\n  ".join(assignments[r]))
+                
+    # # Who has been assigned to each proposal?
+    # for p in proposals:
+    #     print(f"{p}: {who_is_reviewing(p)}")
+        
+    # # Which proposals was each person assigned?
+    # for r in assignments:
+    #     print(r)
+    #     # print("  " + "\n  ".join(assignments[r]))
 
     # Are there any conflicts? A 'False' value here means no conflicts.
     for p, rs in conflicts.items():
-        print(f"{p}: {any(p in assignments[r] for r in rs)}")
+        assert not any(p in assignments[r] for r in rs), f"CoI found for {p}"
+        # print(f"{p}: {any(p in assignments[r] for r in rs)}")
 
     payload = {
         "reviewers": reviewers,
@@ -110,5 +132,5 @@ def distribute_proposals(proposals, seed, reviews_per_proposal):
         "assignments": assignments,
     }
     # base64.b64encode(json.dumps(payload).encode("utf-8"))
-    print(json.dumps(payload, indent=2))
+    # print(json.dumps(payload, indent=2))
     return assignments
