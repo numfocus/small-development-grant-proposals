@@ -1,9 +1,8 @@
 from argparse import ArgumentParser
-import os
 import shlex
 import subprocess
 from datetime import date
-import json
+import time
 
 from sdg_utils import get_all_issues, parse_issue, combine_projects_rounds
 from project_selection import select_proposals_to_fund
@@ -12,7 +11,11 @@ def allocate_funds(issues, budget, funding_limit, seed=None):
 
     proposals = [(issue['project_name'], issue['amount_requested'], issue['funded_amount']) for issue in issues]
     funded = select_proposals_to_fund(budget, funding_limit, proposals, seed=seed)
-
+    print('-' * 60)
+    print("Funded projects:")
+    for project in funded:
+        print(f"- {project}")
+    print('-' * 60)
     for issue in issues:
         if issue['project_name'] in funded:
             command = f'gh issue edit {issue["issue_number"]} --add-label "funded"'
@@ -35,15 +38,13 @@ def main():
             sdg_issues.append(result)
     sdg_issues_round = [sdg for sdg in sdg_issues if sdg['round_number'] == arguments.round and
                       sdg['year'] == date.today().year and
-                      not sdg['awarded']] 
+                      not sdg['awarded']]
     #Filter only this year and combine to calculate all they've been funded ask
     sdg_prev_rounds = [sdg_p for sdg_p in sdg_issues if sdg_p['round_number'] != arguments.round and sdg_p['year'] == date.today().year]
-    print("only this round")
     combine_projects_rounds(sdg_issues_round, sdg_prev_rounds)
-    seed = int(f"{date.today():%d%w%j}{arguments.round}")
+    seed = int(time.time())
+    print(f"Using seed: {seed}")
     allocate_funds(sdg_issues_round, arguments.budget, arguments.funding_limit, seed=seed)
 
 if __name__ == "__main__":
     main()
-
-
