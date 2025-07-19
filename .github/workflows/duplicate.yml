@@ -1,0 +1,35 @@
+name: Check duplicates
+
+on:
+  workflow_dispatch:
+    inputs:
+      round:
+        description: 'which round'
+        required: true
+        type: choice
+        options:
+        - 1
+        - 2
+        - 3
+
+jobs:
+  duplicate-sdg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: pip install requests pyyaml
+
+      - name: Run SDG duplicates checker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: python scripts/check_duplicates.py ${{ inputs.round }}
