@@ -9,10 +9,10 @@ body:
     type: markdown
     attributes:
       value: |+
-        Follow the indications as required to submit a Small Development Grant submission.  
+        Follow the indications as required to submit a Small Development Grant submission.
         Notice that a project lead has to approve the submission.
         > [!CAUTION]
-        > This is a form for only [sponsored](https://numfocus.org/sponsored-projects) and [affiliated](https://numfocus.org/sponsored-projects/affiliated-projects) NumFOCUS projects 
+        > This is a form for only [sponsored](https://numfocus.org/sponsored-projects) and [affiliated](https://numfocus.org/sponsored-projects/affiliated-projects) NumFOCUS projects
         > Discuss the proposal with the project leads before submitting this issue.
         > Each project has a limit of one proposal per round.
   - id: project
@@ -56,8 +56,8 @@ body:
   - id: amount
     type: input
     attributes:
-      label: Amount requested
-      description: How much money is required to execute this proposal
+      label: Amount requested (USD)
+      description: How much money is required to execute this proposal. Please enter the amount in USD without any currency symbols or commas.
       placeholder: "1000"
     validations:
       required: true
