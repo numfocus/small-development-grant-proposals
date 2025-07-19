@@ -267,15 +267,3 @@ gh api graphql -f query='
             if output.returncode != 0:
                 raise ValueError(output.stderr)
 
-        ## SDG reviewers ($SDG_reviewers)
-        output = subprocess.run(
-            shlex.split(
-                command.format(
-                    project_id=project_id,
-                    issue_n=issue_id,
-                )
-            ),
-            capture_output=True,
-        )
-        if output.returncode != 0:
-            raise ValueError(output.stderr)
