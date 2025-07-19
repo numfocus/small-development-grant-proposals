@@ -1,0 +1,19 @@
+# List of reviewers and their conflicts of interest
+# Format:
+# "Name":
+#   - Conflict1
+#   - Conflict2
+# If no conflicts, leave the list empty
+
+# The current list of reviewers is for SDG 2025.
+"David Pérez-Suárez":
+  - SunPy
+"Kalyan Prasad":
+"Brian Skinn":
+"Robert Coup":
+"Lilith Hafner":
+  - SciML
+  - Julia
+"Nizam Uddin Syed":
+"Smit Lunagariya":
+  - QuantEcon

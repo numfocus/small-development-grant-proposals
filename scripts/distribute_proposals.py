@@ -1,7 +1,11 @@
 import json
 import random
+import os
 
 import yaml
+
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def extract_pwc(reviewers):
     return list(set(sum(filter(lambda x: x, list(reviewers.values())), [])))
@@ -11,9 +15,9 @@ def produce_conflicts_dict(reviewers, projects_with_confict):
 
 def distribute_proposals(proposals, seed, reviews_per_proposal):
 
-    with open("CoI.yaml", 'r') as f:
+    with open(os.path.join(CURRENT_DIR, 'reviewers_list.yaml'), 'r') as f:
         reviewers_coi = yaml.safe_load(f.read())
-        
+
     random.seed(seed)
     reviews_per_proposal = reviews_per_proposal
     reviewers = list(reviewers_coi.keys())
@@ -104,4 +108,3 @@ def distribute_proposals(proposals, seed, reviews_per_proposal):
     # base64.b64encode(json.dumps(payload).encode("utf-8"))
     print(json.dumps(payload, indent=2))
     return assignments
-
