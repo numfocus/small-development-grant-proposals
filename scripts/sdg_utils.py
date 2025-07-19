@@ -241,7 +241,7 @@ gh api graphql -f query='
             {  # $project
                 "type": "text",
                 "fieldId": "PVTF_lADOABWvJs4A4B5HzgtERB4",
-                "value": issue["project_name"],
+                "value": f'"{issue["project_name"]}"',
             },
             {  # $amount
                 "type": "number",
