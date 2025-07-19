@@ -206,7 +206,7 @@ gh api graphql -f query='
       input: {{
         projectId: "{project_id}"
         itemId: "{issue_n}"
-        fieldId: "{amount}"
+        fieldId: "{fieldId}"
         value: {{
     {type}: {value}
         }}
@@ -217,37 +217,49 @@ gh api graphql -f query='
       }}
     }}
   }}'
-"""          
+"""
 
     for issue in issues_round:
-        issue_id = next(filter(lambda x: x['number'] == issue['issue_number'], ids))['id']
-
-        ## Amount requested ($amount)
-        output = subprocess.run(shlex.split(command.format(project_id=project_id,
-                                                           issue_n=issue_id,
-                                                           type='number',
-                                                           amount="PVTF_lADOABWvJs4A4B5HzgtEQ_c", # SDG
-                                                           value=issue['amount_requested']
-                                                           )), capture_output=True)
-        if output.returncode != 0:
-            raise ValueError(output.stderr)
-
-        ## Previously amount funded ($previously_funded)
-        output = subprocess.run(shlex.split(command.format(project_id=project_id,
-                                                           issue_n=issue_id,
-                                                           type='number',
-                                                           amount="PVTF_lADOABWvJs4A4B5Hzgu0-dU", # SDG
-                                                           value=issue['funded_amount']
-                                                           )), capture_output=True)
-        if output.returncode != 0:
-            raise ValueError(output.stderr)
+        issue_id = next(filter(lambda x: x["number"] == issue["issue_number"], ids))["id"]
+        fields = [
+            {  # $project
+                "type": "text",
+                "fieldId": "PVTF_lADOABWvJs4A4B5HzgtERB4",
+                "value": issue["project_name"],
+            },
+            {  # $amount
+                "type": "number",
+                "fieldId": "PVTF_lADOABWvJs4A4B5HzgtEQ_c",
+                "value": issue["amount_requested"],
+            },
+            {  # $previously_funded
+                "type": "number",
+                "fieldId": "PVTF_lADOABWvJs4A4B5Hzgu0-dU",
+                "value": issue["funded_amount"],
+            },
+            {  # $SDG_reviewers
+                "type": "text",
+                "fieldId": "PVTF_lADOABWvJs4A4B5HzgtEQ-o",
+                "value": f'"{",".join(issue["reviewers"])}"',
+            },
+        ]
+        for field in fields:
+            output = subprocess.run(
+                shlex.split(command.format(project_id=project_id, issue_n=issue_id, **field)),
+                capture_output=True,
+            )
+            if output.returncode != 0:
+                raise ValueError(output.stderr)
 
         ## SDG reviewers ($SDG_reviewers)
-        output = subprocess.run(shlex.split(command.format(project_id=project_id,
-                                                           issue_n=issue_id,
-                                                           type='text',
-                                                           amount="PVTF_lADOABWvJs4A4B5HzgtEQ-o",
-                                                           value=f"\"{','.join(issue['reviewers'])}\""
-                                                           )), capture_output=True)
+        output = subprocess.run(
+            shlex.split(
+                command.format(
+                    project_id=project_id,
+                    issue_n=issue_id,
+                )
+            ),
+            capture_output=True,
+        )
         if output.returncode != 0:
             raise ValueError(output.stderr)
