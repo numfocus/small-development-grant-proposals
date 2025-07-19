@@ -14,16 +14,21 @@ API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/issues"
 HEADERS = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
     "Accept": "application/vnd.github+json",
-    "X-GitHub-Api-Version": "2022-11-28"
+    "X-GitHub-Api-Version": "2022-11-28",
 }
 
 LABEL_PATTERN = re.compile(r"(\d{4})-R(\d+)")
+
 
 def get_all_issues():
     issues = []
     page = 1
     while True:
-        response = requests.get(API_URL, headers=HEADERS, params={"state": "open", "per_page": 100, "page": page})
+        response = requests.get(
+            API_URL,
+            headers=HEADERS,
+            params={"state": "open", "per_page": 100, "page": page},
+        )
         if response.status_code != 200:
             raise Exception(f"Failed to fetch issues: {response.status_code} - {response.text}")
         page_issues = response.json()
@@ -35,7 +40,14 @@ def get_all_issues():
 
 
 def parse_issue(issue):
-    label_info = next((LABEL_PATTERN.match(label["name"]) for label in issue["labels"] if LABEL_PATTERN.match(label["name"])), None)
+    label_info = next(
+        (
+            LABEL_PATTERN.match(label["name"])
+            for label in issue["labels"]
+            if LABEL_PATTERN.match(label["name"])
+        ),
+        None,
+    )
     if not label_info:
         return None
 
@@ -65,20 +77,21 @@ def parse_issue(issue):
         "amount_requested": amount_requested,
         "issue_number": issue["number"],
         "project_name": project_name,
-        "reviewers": []
+        "reviewers": [],
     }
+
 
 def combine_projects_rounds(issues_round, issues_prev):
     for sdg in issues_round:
         for sdg_prev in issues_prev:
-            if sdg['project_name'] == sdg_prev['project_name']:
-                sdg['funded_amount'] += sdg_prev['funded_amount']
+            if sdg["project_name"] == sdg_prev["project_name"]:
+                sdg["funded_amount"] += sdg_prev["funded_amount"]
 
 
 def update_board(issues_round, round):
     GH_TOKEN = os.getenv("GH_TOKEN")
 
-## Finding the project board id    
+    ## Finding the project board id
     command = """
 gh api graphql -f query='
   query($organization: String! $number: Int!){
@@ -89,14 +102,15 @@ gh api graphql -f query='
     }
   }' -f organization=numfocus -F number=11
      """
-## PVT_kwDOABWvJs4A4B5H
+    ## PVT_kwDOABWvJs4A4B5H
     output = subprocess.run(shlex.split(command), capture_output=True)
     if output.returncode == 0:
-        project_id = json.loads(output.stdout)['data']['organization']['projectV2']['id']
+        project_id = json.loads(output.stdout)["data"]["organization"]["projectV2"]["id"]
     else:
         raise ValueError(output.stderr)
 
-## Finding the ids for each field
+    ## Finding the ids for each field
+    ## from https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-api-to-manage-projects#finding-the-node-id-of-a-field)
     command = """
 gh api graphql -f query='
   query{{
@@ -138,24 +152,21 @@ gh api graphql -f query='
     # else:
     #     raise ValueError(output.stderr)
 
-### Querying the issue independently to the repo produces a different id.
-#     command = """
-# gh api graphql -f query='query FindIssueID {{
-#   repository(owner:"dpshelio", name:"sample-gh") {{
-#     issue(number:3) {{
-#       id
-#     }}
-#   }}
-# }}'
-# """    
-#     output = subprocess.run(shlex.split(command.format(project_id=project_id)), capture_output=True)
-#     if output.returncode == 0:
-#         print(json.dumps(json.loads(output.stdout), indent=2))
-#     else:
-#         raise ValueError(output.stderr)
-
-
-
+    ### Querying the issue independently to the repo produces a different id.
+    #     command = """
+    # gh api graphql -f query='query FindIssueID {{
+    #   repository(owner:"dpshelio", name:"sample-gh") {{
+    #     issue(number:3) {{
+    #       id
+    #     }}
+    #   }}
+    # }}'
+    # """
+    #     output = subprocess.run(shlex.split(command.format(project_id=project_id)), capture_output=True)
+    #     if output.returncode == 0:
+    #         print(json.dumps(json.loads(output.stdout), indent=2))
+    #     else:
+    #         raise ValueError(output.stderr)
 
     ### Finding the issues IDs
     command = """
@@ -183,22 +194,27 @@ gh api graphql -f query='
       }}
     }}'
 """
-    output = subprocess.run(shlex.split(command.format(project_id=project_id,
-                                                       )), capture_output=True)
+    output = subprocess.run(
+        shlex.split(
+            command.format(
+                project_id=project_id,
+            )
+        ),
+        capture_output=True,
+    )
     if output.returncode == 0:
-        ids = json.loads(output.stdout)['data']['node']['items']['nodes']
+        ids = json.loads(output.stdout)["data"]["node"]["items"]["nodes"]
         # simplify the structure received from graphql
         for card in ids:
-            labels = [x['name'] for x in card['content']['labels']['nodes']]
-            card['content']['labels'] = labels
-            card |= card['content']
-            del card['content']
+            labels = [x["name"] for x in card["content"]["labels"]["nodes"]]
+            card["content"]["labels"] = labels
+            card |= card["content"]
+            del card["content"]
         print(json.dumps(ids, indent=2))
     else:
         raise ValueError(output.stderr)
-    
 
-### Updating an issue    
+    ### Updating an issue
     command = """
 gh api graphql -f query='
   mutation {{

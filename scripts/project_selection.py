@@ -67,15 +67,11 @@ def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
     print(
         f"Allocated: ${round(budget - budget_remaining, 2)} (${round(abs(budget_remaining), 2)} {'over' if budget_remaining < 0 else 'under'} budget)"
     )
-    print(
-        f"{len(funded)} proposals funded out of {len(proposals)} total proposals in the drawing"
-    )
+    print(f"{len(funded)} proposals funded out of {len(proposals)} total proposals in the drawing")
     print()
     print("Funded the following projects")
 
     for p in funded:
-        print(
-            f'Fund "{p[0]}" for ${p[1]} bringing its project\'s annual total to ${p[1] + p[2]}.'
-        )
+        print(f'Fund "{p[0]}" for ${p[1]} bringing its project\'s annual total to ${p[1] + p[2]}.')
 
     return [f[0] for f in funded]
