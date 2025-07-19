@@ -81,16 +81,6 @@ def update_board(issues_round, round):
 ## Finding the project board id    
     command = """
 gh api graphql -f query='
-  query($user: String! $number: Int!){
-    user(login: $user){
-      projectV2(number: $number) {
-        id
-      }
-    }
-  }' -f user=dpshelio -F number=3
-    """
-    command = """
-gh api graphql -f query='
   query($organization: String! $number: Int!){
     organization(login: $organization){
       projectV2(number: $number) {
@@ -102,7 +92,6 @@ gh api graphql -f query='
 ## PVT_kwDOABWvJs4A4B5H
     output = subprocess.run(shlex.split(command), capture_output=True)
     if output.returncode == 0:
-        # project_id = json.loads(output.stdout)['data']['user']['projectV2']['id']
         project_id = json.loads(output.stdout)['data']['organization']['projectV2']['id']
     else:
         raise ValueError(output.stderr)
@@ -233,33 +222,31 @@ gh api graphql -f query='
     for issue in issues_round:
         issue_id = next(filter(lambda x: x['number'] == issue['issue_number'], ids))['id']
 
-        ## Amount requested
+        ## Amount requested ($amount)
         output = subprocess.run(shlex.split(command.format(project_id=project_id,
                                                            issue_n=issue_id,
                                                            type='number',
-                                                           amount="PVTF_lAHOAA6yqs4A2g3RzgrzuYg",
-                                                           # amount="PVTF_lADOABWvJs4A4B5HzgtEQ_c", # SDG
+                                                           amount="PVTF_lADOABWvJs4A4B5HzgtEQ_c", # SDG
                                                            value=issue['amount_requested']
                                                            )), capture_output=True)
         if output.returncode != 0:
             raise ValueError(output.stderr)
 
-        ## Previously amount funded
+        ## Previously amount funded ($previously_funded)
         output = subprocess.run(shlex.split(command.format(project_id=project_id,
                                                            issue_n=issue_id,
                                                            type='number',
-                                                           amount="PVTF_lAHOAA6yqs4A2g3Rzgu0-AQ", # dps
-                                                           # amount="PVTF_lADOABWvJs4A4B5Hzgu0-dU", # SDG
+                                                           amount="PVTF_lADOABWvJs4A4B5Hzgu0-dU", # SDG
                                                            value=issue['funded_amount']
                                                            )), capture_output=True)
         if output.returncode != 0:
             raise ValueError(output.stderr)
 
-        ## SDG reviewers
+        ## SDG reviewers ($SDG_reviewers)
         output = subprocess.run(shlex.split(command.format(project_id=project_id,
                                                            issue_n=issue_id,
                                                            type='text',
-                                                           amount="PVTF_lAHOAA6yqs4A2g3RzgrzuQ4",
+                                                           amount="PVTF_lADOABWvJs4A4B5HzgtEQ-o",
                                                            value=f"\"{','.join(issue['reviewers'])}\""
                                                            )), capture_output=True)
         if output.returncode != 0:
