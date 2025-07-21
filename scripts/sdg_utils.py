@@ -78,7 +78,7 @@ def combine_projects_rounds(issues_round, issues_prev):
 def update_board(issues_round, round):
     GH_TOKEN = os.getenv("GH_TOKEN")
 
-## Finding the project board id    
+## Finding the project board id
     command = """
 gh api graphql -f query='
   query($user: String! $number: Int!){
@@ -103,6 +103,8 @@ gh api graphql -f query='
     output = subprocess.run(shlex.split(command), capture_output=True)
     if output.returncode == 0:
         # project_id = json.loads(output.stdout)['data']['user']['projectV2']['id']
+        with open('debug.json', 'w') as f:
+            f.write(output.stdout.decode('utf-8'))
         project_id = json.loads(output.stdout)['data']['organization']['projectV2']['id']
     else:
         raise ValueError(output.stderr)
@@ -158,7 +160,7 @@ gh api graphql -f query='
 #     }}
 #   }}
 # }}'
-# """    
+# """
 #     output = subprocess.run(shlex.split(command.format(project_id=project_id)), capture_output=True)
 #     if output.returncode == 0:
 #         print(json.dumps(json.loads(output.stdout), indent=2))
@@ -207,9 +209,9 @@ gh api graphql -f query='
         print(json.dumps(ids, indent=2))
     else:
         raise ValueError(output.stderr)
-    
 
-### Updating an issue    
+
+### Updating an issue
     command = """
 gh api graphql -f query='
   mutation {{
@@ -228,7 +230,7 @@ gh api graphql -f query='
       }}
     }}
   }}'
-"""          
+"""
 
     for issue in issues_round:
         issue_id = next(filter(lambda x: x['number'] == issue['issue_number'], ids))['id']

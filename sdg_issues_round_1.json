@@ -1,0 +1,410 @@
+[
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 39,
+    "project_name": "ArviZ",
+    "reviewers": [
+      "Robert Coup"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 6720,
+    "issue_number": 38,
+    "project_name": "pvlib-python",
+    "reviewers": [
+      "Kalyan Prasad"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 9500,
+    "issue_number": 37,
+    "project_name": "Econ-ARK",
+    "reviewers": [
+      "David P\u00e9rez-Su\u00e1rez"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 36,
+    "project_name": "QuTiP",
+    "reviewers": [
+      "Robert Coup"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 35,
+    "project_name": "PUDL",
+    "reviewers": [
+      "Nizam Uddin Syed"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 34,
+    "project_name": "aeon",
+    "reviewers": [
+      "Nizam Uddin Syed"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 33,
+    "project_name": "Stan",
+    "reviewers": [
+      "David P\u00e9rez-Su\u00e1rez"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 32,
+    "project_name": "MDAnalysis",
+    "reviewers": [
+      "Smit Lunagariya"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 31,
+    "project_name": "fortran-lang",
+    "reviewers": [
+      "Kalyan Prasad"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 6000,
+    "issue_number": 30,
+    "project_name": "GeomScale",
+    "reviewers": [
+      "Lilith Hafner"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 28,
+    "project_name": "JuMP",
+    "reviewers": [
+      "Kalyan Prasad"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 9100,
+    "issue_number": 26,
+    "project_name": "pysal",
+    "reviewers": [
+      "Lilith Hafner"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 9800,
+    "issue_number": 25,
+    "project_name": "geopandas",
+    "reviewers": [
+      "Lilith Hafner"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 24,
+    "project_name": "Taskflow",
+    "reviewers": [
+      "Robert Coup"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 3000,
+    "issue_number": 23,
+    "project_name": "PyDMD",
+    "reviewers": [
+      "Nizam Uddin Syed"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 8676,
+    "issue_number": 22,
+    "project_name": "AiiDA",
+    "reviewers": [
+      "Smit Lunagariya"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 21,
+    "project_name": "Spyder",
+    "reviewers": [
+      "Kalyan Prasad"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 20,
+    "project_name": "Vega",
+    "reviewers": [
+      "Robert Coup"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 19,
+    "project_name": "OpenFHE",
+    "reviewers": [
+      "Lilith Hafner"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 18,
+    "project_name": "Nibabel",
+    "reviewers": [
+      "Smit Lunagariya"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 17,
+    "project_name": "LFortran",
+    "reviewers": [
+      "Smit Lunagariya"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 8800,
+    "issue_number": 16,
+    "project_name": "GNU Radio",
+    "reviewers": [
+      "David P\u00e9rez-Su\u00e1rez"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 14,
+    "project_name": "Colour",
+    "reviewers": [
+      "Kalyan Prasad"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 8400,
+    "issue_number": 13,
+    "project_name": "SciML",
+    "reviewers": [
+      "David P\u00e9rez-Su\u00e1rez"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 12,
+    "project_name": "conda-forge",
+    "reviewers": [
+      "Smit Lunagariya"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 9500,
+    "issue_number": 11,
+    "project_name": "QuantEcon",
+    "reviewers": [
+      "Robert Coup"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 9400,
+    "issue_number": 10,
+    "project_name": "Blosc",
+    "reviewers": [
+      "David P\u00e9rez-Su\u00e1rez"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 9620,
+    "issue_number": 8,
+    "project_name": "TARDIS",
+    "reviewers": [
+      "Nizam Uddin Syed"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 3000,
+    "issue_number": 7,
+    "project_name": "optimagic",
+    "reviewers": [
+      "Kalyan Prasad"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 6,
+    "project_name": "scverse",
+    "reviewers": [
+      "David P\u00e9rez-Su\u00e1rez"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 10000,
+    "issue_number": 4,
+    "project_name": "scikit-learn",
+    "reviewers": [
+      "Smit Lunagariya"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 7360,
+    "issue_number": 3,
+    "project_name": "skforecast",
+    "reviewers": [
+      "Nizam Uddin Syed"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 1600,
+    "issue_number": 2,
+    "project_name": "Orange",
+    "reviewers": [
+      "Robert Coup"
+    ]
+  },
+  {
+    "awarded": false,
+    "year": 2025,
+    "round_number": 1,
+    "funded_amount": 0,
+    "amount_requested": 9600,
+    "issue_number": 1,
+    "project_name": "toqito",
+    "reviewers": [
+      "Lilith Hafner"
+    ]
+  }
+]

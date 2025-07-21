@@ -38,15 +38,16 @@ def main():
 
     sdg_issues_round = [sdg for sdg in sdg_issues if sdg['round_number'] == arguments.round and
                       sdg['year'] == date.today().year and
-                      not sdg['awarded']] 
+                      not sdg['awarded']]
     #Filter only this year and combine to calculate all they've been funded ask
     sdg_prev_rounds = [sdg_p for sdg_p in sdg_issues if sdg_p['round_number'] != arguments.round and sdg_p['year'] == date.today().year]
     print("only this round")
     combine_projects_rounds(sdg_issues_round, sdg_prev_rounds)
     assign_reviewers(sdg_issues_round, arguments.round, arguments.reviewers)
     print(json.dumps(sdg_issues_round, indent=2))
-    update_board(sdg_issues_round, arguments.round)
+    with open(f'sdg_issues_round_{arguments.round}.json', 'w') as f:
+        json.dump(sdg_issues_round, f, indent=2)
+    # update_board(sdg_issues_round, arguments.round)
 
 if __name__ == "__main__":
     main()
-
