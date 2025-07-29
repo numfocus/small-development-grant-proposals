@@ -72,3 +72,13 @@ gh workflow run funding.yml -f round=1 -f budget=15000
 ```
 
 This will run the action and label as "funded" the projects that have been randomly selected.
+
+
+## Close the not funded projects
+
+Once that the projects from a particular round have been selected and funded, the rest can be closed as "not planned".
+
+```
+gh issue list -S "-label:funded label:2025-RX-CHANGEME" -L 100 --json 'number' --jq '[.[].number] | @sh' | tr -d '\n' | xargs -d " " -I% gh issue close % -r "not planned"
+```
+
