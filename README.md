@@ -22,7 +22,9 @@ By using issues on this open repository, people from the community can add comme
 
 The proposal has been simplified, as well as the selection process. The Small Development Grants program committee will review the approprietness of the proposal (is it aligned with the project's goals? does the funding requested seems reasonable?). Between all the appropriate proposals, a randomisation algorithm will be used to rank the proposals, and they will be awarded till the funds for each round are exhausted. Since each project is limited to $10k of funding per year through this program, the randomisation algorithm will take in consideration what projects have been funded on previous rounds and the total amount of money funded so far.
 
-The committee will select one proposal per round based on their merits that will be awarded the funds skipping the randomisation algorithm.
+The committee will select one proposal per round based on their merits that will be awarded the funds skipping the randomisation algorithm.  
+***Note:**  these awards have been postponed for 2025.*
+
 
 #### Can I see the randomisation script?
 
