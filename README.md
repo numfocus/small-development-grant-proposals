@@ -30,7 +30,7 @@ The committee will select one proposal per round based on their merits that will
 
 Yes! The [script is available in this repository](./scripts/project_selection.py). The execution of the script will happen using github actions (this is still working on progress)
 
-### How will GitHub be used to manage the projects?
+### How will GitHub be used to manage submitted projects?
 
 Project proposals will be received as issues. These issues will be originally labelled as `Awaiting approval` till project leads confirm it's real (NumFOCUS will contact them in case they've not reacted). Proposals that aren't confirmed will be closed as `rejected` and labelled as `spam`. Everything else will be labelled as `YYYY-RX` (where `YYYY` is the year, and `RX` will be the selected round in that year - e.g., `2025R1`)
 
