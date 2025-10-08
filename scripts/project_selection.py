@@ -1,6 +1,14 @@
 import numpy as np
 
 
+class Proposal:
+
+    def __init__(self, name, requested_amount, previous_funding):
+        self.name = str(name)
+        self.requested_amount = abs(requested_amount)
+        self.previous_funding = previous_funding
+
+
 def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
     """
     Randomly selects which proposals to fund in a round.
@@ -11,47 +19,54 @@ def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
 
     `proposals` is a list of tuples of the form `(name, requested_amount, previous_funding)`
     where `name` is the name of the proposal, `requested_amount` is the amount of funding
-    that proposal requests and `previos_funding` is the amount of funding the project
-    associated with that proposal has received that year.
+    that proposal requests and `previous_funding` is the amount of funding the
+    project associated with that proposal has received that year.
 
     This function will throw and not produce any results if any of its inputs are invalid.
     """
 
-    np.random.seed(seed)
+    # `seed` can be a seed (integer) or a random number generator.
+    rng = np.random.default_rng(seed)
 
-    for p in proposals:
-        if len(p) != 3:
-            raise ValueError("Malformed proposal")
-        if p[1] + p[2] > funding_limit:
-            raise ValueError(
-                f'If proposal "{p[0]}" were funded it would receive more than the funding limit this year.'
-            )
+    proposals = [Proposal(*p) for p in proposals]
+    n_proposals = len(proposals)
 
-    names = [str(p[0]) for p in proposals]
-    weights = [(funding_limit - p[2]) / p[1] for p in proposals]
-
-    for w in weights:
-        assert w >= 1  # this should be redundant with the validation check above.
-
-    if len(set(names)) != len(names):
+    if len(set(p.name for p in proposals)) != n_proposals:
         raise ValueError("Proposal names are not unique")
+
+    weights = np.zeros(n_proposals)
+    for i, p in enumerate(proposals):
+        remaining_limit = funding_limit - p.previous_funding
+        if p.requested_amount > remaining_limit:
+            raise ValueError(
+                f'If proposal "{p.name}" were funded it would receive more '
+                'than the per-project funding limit this year.'
+            )
+        # Decrease weight for projects that have already had previous funding.
+        weights[i] = remaining_limit / p.requested_amount
+        assert weights[i] >= 1  # this should be redundant with the validation check above.
 
     funded = []
     budget_remaining = budget
-    temp_budget_remaining = budget + 0
-    while budget_remaining > 0 and len(funded) < len(proposals):
-        total_weight = sum(weights)
+    while budget_remaining > 0 and len(funded) < n_proposals:
+        total_weight = np.sum(weights)
         if total_weight == 0:
             # When all the proposals have been evaluated and there's still budget
             break
-        i = np.random.choice(range(len(weights)), p=[w / total_weight for w in weights])
+        # Select one project using weights.
+        i = rng.choice(n_proposals, p=weights / total_weight)
+        # Implement selection (but dependent on deficit check below).
         weights[i] = 0
         proposal = proposals[i]
-        proposal_budget = proposal[1]
-        temp_budget_remaining -= proposal_budget
-        if temp_budget_remaining > -proposal_budget / 2:
-            funded.append(proposal)
-            budget_remaining = temp_budget_remaining
+        budget_remaining -= proposal.requested_amount
+        deficit = -budget_remaining if budget_remaining < 0 else 0
+        if deficit > proposal.requested_amount / 2:
+            # Deficit is too great, add back project budget, and find
+            # another project to try.
+            budget_remaining += proposal.requested_amount
+            continue
+        # Confirm selection.
+        funded.append(proposal)
 
     print("Inputs:")
     print(f"Budget: ${budget}")
@@ -59,7 +74,8 @@ def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
     print("Proposals in the drawing:")
     for p in proposals:
         print(
-            f'"{p[0]}" requests ${p[1]} and is proposed by a project that has previously received ${p[2]} this year.'
+            f'"{p.name}" requests ${p.requested_amount} and is proposed by a '
+            f'project that has previously received ${p.previous_funding} this year.'
         )
 
     print()
@@ -67,11 +83,12 @@ def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
     print(
         f"Allocated: ${round(budget - budget_remaining, 2)} (${round(abs(budget_remaining), 2)} {'over' if budget_remaining < 0 else 'under'} budget)"
     )
-    print(f"{len(funded)} proposals funded out of {len(proposals)} total proposals in the drawing")
+    print(f"{len(funded)} proposals funded out of {n_proposals} total proposals in the drawing")
     print()
     print("Funded the following projects")
 
     for p in funded:
-        print(f'Fund "{p[0]}" for ${p[1]} bringing its project\'s annual total to ${p[1] + p[2]}.')
+        print(f'Fund "{p.name}" for ${p.requested_amount} bringing its '
+              f'project\'s annual total to ${p.requested_amount + p.previous_funding}.')
 
-    return [f[0] for f in funded]
+    return [f.name for f in funded]
