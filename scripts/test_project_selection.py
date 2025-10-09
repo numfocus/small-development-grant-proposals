@@ -1,5 +1,4 @@
 import pytest
-import numpy as np
 
 from project_selection import select_proposals_to_fund
 
@@ -7,28 +6,34 @@ from project_selection import select_proposals_to_fund
 @pytest.mark.parametrize(
     "proposals, errmessage",
     [
-        ([("A", 2, 0, 3)], r"Malformed proposal"),
         (
             [("A", 3, 1)],
-            r'If proposal "A" were funded it would receive more than the funding limit this year.',
+            r'If proposal "A" were funded it would receive more than '
+            'the per-project funding limit this year.',
         ),
         (
             [("A", 2, 1)],
-            r'If proposal "A" were funded it would receive more than the funding limit this year.',
+            r'If proposal "A" were funded it would receive more than '
+            'the per-project funding limit this year.',
         ),
         ([("A", 0.5, 1), ("A", 0.5, 1)], r"Proposal names are not unique"),
     ],
 )
 def test_select_proposals_wrong_input(proposals, errmessage):
-    np.random.seed(2025)
     budget = 5
     funding_limit = 2
     with pytest.raises(ValueError, match=errmessage):
-        select_proposals_to_fund(budget, funding_limit, proposals)
+        select_proposals_to_fund(budget, funding_limit, proposals, seed=2025)
+
+
+def test_malformed():
+    with pytest.raises(TypeError):
+        select_proposals_to_fund(5, 2, [("A", 2, 0, 3)])
+    with pytest.raises(TypeError):
+        select_proposals_to_fund(5, 2, [("A", 2)])
 
 
 def test_select_proposals_all_funds(capfd):
-    np.random.seed(2025)
     budget = 5
     funding_limit = 2
     proposals = [("A", 2, 0), ("B", 1, 0), ("C", 1, 0), ("D", 0.5, 0), ("E", 0.5, 0)]
@@ -55,7 +60,10 @@ def test_select_proposals_all_funds(capfd):
         'Fund "C" for $1 bringing its project\'s annual total to $1.\n'
         'Fund "A" for $2 bringing its project\'s annual total to $2.\n'
     )
-    result = select_proposals_to_fund(budget, funding_limit, proposals)
+    result = select_proposals_to_fund(budget,
+                                      funding_limit,
+                                      proposals,
+                                      seed=2025)
     captured = capfd.readouterr()
 
     assert set(result) == expected_result
@@ -63,7 +71,6 @@ def test_select_proposals_all_funds(capfd):
 
 
 def test_select_proposals_more_than_funds(capfd):
-    np.random.seed(2025)
     budget = 5
     funding_limit = 2
     proposals = [
@@ -103,7 +110,10 @@ def test_select_proposals_more_than_funds(capfd):
         'Fund "B" for $1 bringing its project\'s annual total to $1.\n'
         'Fund "A" for $2 bringing its project\'s annual total to $2.\n'
     )
-    result = select_proposals_to_fund(budget, funding_limit, proposals)
+    result = select_proposals_to_fund(budget,
+                                      funding_limit,
+                                      proposals,
+                                      seed=2025)
     captured = capfd.readouterr()
 
     assert set(result) == expected_result
@@ -111,7 +121,6 @@ def test_select_proposals_more_than_funds(capfd):
 
 
 def test_select_proposals_more_than_funds_under(capfd):
-    np.random.seed(2025)
     budget = 4.1
     funding_limit = 2
     proposals = [
@@ -150,7 +159,10 @@ def test_select_proposals_more_than_funds_under(capfd):
         'Fund "D" for $0.5 bringing its project\'s annual total to $0.5.\n'
         'Fund "B" for $1 bringing its project\'s annual total to $1.\n'
     )
-    result = select_proposals_to_fund(budget, funding_limit, proposals)
+    result = select_proposals_to_fund(budget,
+                                      funding_limit,
+                                      proposals,
+                                      seed=2025)
     captured = capfd.readouterr()
 
     assert set(result) == expected_result
@@ -158,7 +170,6 @@ def test_select_proposals_more_than_funds_under(capfd):
 
 
 def test_select_proposals_more_than_funds_eqweight_zero(capfd):
-    np.random.seed(2025)
     budget = 6
     funding_limit = 2
     proposals = [
@@ -198,7 +209,10 @@ def test_select_proposals_more_than_funds_eqweight_zero(capfd):
         'Fund "C" for $1 bringing its project\'s annual total to $1.\n'
         'Fund "A" for $1 bringing its project\'s annual total to $1.\n'
     )
-    result = select_proposals_to_fund(budget, funding_limit, proposals)
+    result = select_proposals_to_fund(budget,
+                                      funding_limit,
+                                      proposals,
+                                      seed=2025)
     captured = capfd.readouterr()
 
     assert set(result) == expected_result
@@ -206,7 +220,6 @@ def test_select_proposals_more_than_funds_eqweight_zero(capfd):
 
 
 def test_select_proposals_more_than_funds_eqweight_under(capfd):
-    np.random.seed(2025)
     budget = 5.4
     funding_limit = 2
     proposals = [
@@ -245,7 +258,10 @@ def test_select_proposals_more_than_funds_eqweight_under(capfd):
         'Fund "D" for $1 bringing its project\'s annual total to $1.\n'
         'Fund "C" for $1 bringing its project\'s annual total to $1.\n'
     )
-    result = select_proposals_to_fund(budget, funding_limit, proposals)
+    result = select_proposals_to_fund(budget,
+                                      funding_limit,
+                                      proposals,
+                                      seed=2025)
     captured = capfd.readouterr()
 
     assert set(result) == expected_result
@@ -253,7 +269,6 @@ def test_select_proposals_more_than_funds_eqweight_under(capfd):
 
 
 def test_select_proposals_more_than_funds_eqweight_over(capfd):
-    np.random.seed(2025)
     budget = 6.6
     funding_limit = 2
     proposals = [
@@ -294,7 +309,10 @@ def test_select_proposals_more_than_funds_eqweight_over(capfd):
         'Fund "A" for $1 bringing its project\'s annual total to $1.\n'
         'Fund "F" for $1 bringing its project\'s annual total to $1.\n'
     )
-    result = select_proposals_to_fund(budget, funding_limit, proposals)
+    result = select_proposals_to_fund(budget,
+                                      funding_limit,
+                                      proposals,
+                                      seed=2025)
     captured = capfd.readouterr()
 
     assert set(result) == expected_result
