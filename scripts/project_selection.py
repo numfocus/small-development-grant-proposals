@@ -87,7 +87,7 @@ def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
     print()
     print("Funded the following projects")
 
-    for p in funded:
+    for p in sorted(funded, key=lambda v : proposals.index(v)):
         print(f'Fund "{p.name}" for ${p.requested_amount} bringing its '
               f'project\'s annual total to ${p.requested_amount + p.previous_funding}.')
 
