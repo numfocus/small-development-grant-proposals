@@ -46,15 +46,19 @@ def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
         weights[i] = remaining_limit / p.requested_amount
         assert weights[i] >= 1  # this should be redundant with the validation check above.
 
-    fund_ordering = rng.choice(proposals,
-                               p=weights / np.sum(weights),
-                               size=n_proposals,
-                               replace=False)
-
     # Check / filter proposals to those within budget deficit limit.
     funded = []
     budget_remaining = budget
-    for proposal in fund_ordering:
+    while budget_remaining > 0 and len(funded) < n_proposals:
+        total_weight = np.sum(weights)
+        if total_weight == 0:
+            # When all the proposals have been evaluated and there's still budget
+            break
+        # Select one project using weights.
+        i = rng.choice(n_proposals, p=weights / total_weight)
+        # Implement selection (but dependent on deficit check below).
+        weights[i] = 0
+        proposal = proposals[i]
         budget_remaining -= proposal.requested_amount
         deficit = -budget_remaining if budget_remaining < 0 else 0
         if deficit > proposal.requested_amount / 2:
