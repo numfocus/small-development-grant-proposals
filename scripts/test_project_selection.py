@@ -3,6 +3,7 @@ from collections import Counter
 import numpy as np
 
 import pytest
+from inline_snapshot import snapshot
 
 from project_selection import select_proposals_to_fund
 
@@ -112,40 +113,38 @@ def test_select_proposals_more_than_funds(capfd):
     # Reset output.
     capfd.readouterr()
 
-    expected_result = {'B', 'C', 'D', 'F', 'G', 'H'}
-    expected_captured = (
-        "Inputs:\n"
-        "Budget: $5\n"
-        "Per-project funding limit: $2\n"
-        "Proposals in the drawing:\n"
-        '"A" requests $2 and is proposed by a project that has previously received $0 this year.\n'
-        '"B" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"C" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"D" requests $0.5 and is proposed by a project that has previously received $0 this year.\n'
-        '"E" requests $1.5 and is proposed by a project that has previously received $0 this year.\n'
-        '"F" requests $0.25 and is proposed by a project that has previously received $0 this year.\n'
-        '"G" requests $1.9 and is proposed by a project that has previously received $0 this year.\n'
-        '"H" requests $0.7 and is proposed by a project that has previously received $0 this year.\n'
-        "\n"
-        "Random Outputs:\n"
-        'Allocated: $5.35 ($0.35 over budget)\n'
-        '6 proposals funded out of 8 total proposals in the drawing\n\n'
-        'Funded the following projects\n'
-        'Fund "B" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "C" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "D" for $0.5 bringing its project\'s annual total to $0.5.\n'
-        'Fund "F" for $0.25 bringing its project\'s annual total to $0.25.\n'
-        'Fund "G" for $1.9 bringing its project\'s annual total to $1.9.\n'
-        'Fund "H" for $0.7 bringing its project\'s annual total to $0.7.\n'
-    )
     result = select_proposals_to_fund(budget,
                                       funding_limit,
                                       proposals,
                                       seed=2025)
     captured = capfd.readouterr()
 
-    assert set(result) == expected_result
-    assert captured.out == expected_captured
+    assert set(result) == snapshot({'D','E','F','G','H'})
+    assert captured.out == snapshot("""\
+Inputs:
+Budget: $5
+Per-project funding limit: $2
+Proposals in the drawing:
+"A" requests $2 and is proposed by a project that has previously received $0 this year.
+"B" requests $1 and is proposed by a project that has previously received $0 this year.
+"C" requests $1 and is proposed by a project that has previously received $0 this year.
+"D" requests $0.5 and is proposed by a project that has previously received $0 this year.
+"E" requests $1.5 and is proposed by a project that has previously received $0 this year.
+"F" requests $0.25 and is proposed by a project that has previously received $0 this year.
+"G" requests $1.9 and is proposed by a project that has previously received $0 this year.
+"H" requests $0.7 and is proposed by a project that has previously received $0 this year.
+
+Random Outputs:
+Allocated: $4.85 ($0.15 under budget)
+5 proposals funded out of 8 total proposals in the drawing
+
+Funded the following projects
+Fund "D" for $0.5 bringing its project's annual total to $0.5.
+Fund "E" for $1.5 bringing its project's annual total to $1.5.
+Fund "F" for $0.25 bringing its project's annual total to $0.25.
+Fund "G" for $1.9 bringing its project's annual total to $1.9.
+Fund "H" for $0.7 bringing its project's annual total to $0.7.
+""")
 
 
 def test_select_proposals_more_than_funds_under(capfd):
@@ -166,39 +165,38 @@ def test_select_proposals_more_than_funds_under(capfd):
     # Reset output.
     capfd.readouterr()
 
-    expected_result = {'C', 'D', 'E', 'F', 'H'}
-    expected_captured = (
-        "Inputs:\n"
-        "Budget: $4.1\n"
-        "Per-project funding limit: $2\n"
-        "Proposals in the drawing:\n"
-        '"A" requests $2 and is proposed by a project that has previously received $0 this year.\n'
-        '"B" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"C" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"D" requests $0.5 and is proposed by a project that has previously received $0 this year.\n'
-        '"E" requests $1.5 and is proposed by a project that has previously received $0 this year.\n'
-        '"F" requests $0.25 and is proposed by a project that has previously received $0 this year.\n'
-        '"G" requests $1.9 and is proposed by a project that has previously received $0 this year.\n'
-        '"H" requests $0.7 and is proposed by a project that has previously received $0 this year.\n'
-        "\n"
-        "Random Outputs:\n"
-        'Allocated: $3.95 ($0.15 under budget)\n'
-        '5 proposals funded out of 8 total proposals in the drawing\n\n'
-        'Funded the following projects\n'
-        'Fund "C" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "D" for $0.5 bringing its project\'s annual total to $0.5.\n'
-        'Fund "E" for $1.5 bringing its project\'s annual total to $1.5.\n'
-        'Fund "F" for $0.25 bringing its project\'s annual total to $0.25.\n'
-        'Fund "H" for $0.7 bringing its project\'s annual total to $0.7.\n'
-    )
     result = select_proposals_to_fund(budget,
                                       funding_limit,
                                       proposals,
                                       seed=2026)
     captured = capfd.readouterr()
 
-    assert set(result) == expected_result
-    assert captured.out == expected_captured
+    assert set(result) == snapshot({'B','C','D','E','F'})
+    assert captured.out == snapshot("""\
+Inputs:
+Budget: $4.1
+Per-project funding limit: $2
+Proposals in the drawing:
+"A" requests $2 and is proposed by a project that has previously received $0 this year.
+"B" requests $1 and is proposed by a project that has previously received $0 this year.
+"C" requests $1 and is proposed by a project that has previously received $0 this year.
+"D" requests $0.5 and is proposed by a project that has previously received $0 this year.
+"E" requests $1.5 and is proposed by a project that has previously received $0 this year.
+"F" requests $0.25 and is proposed by a project that has previously received $0 this year.
+"G" requests $1.9 and is proposed by a project that has previously received $0 this year.
+"H" requests $0.7 and is proposed by a project that has previously received $0 this year.
+
+Random Outputs:
+Allocated: $4.25 ($0.15 over budget)
+5 proposals funded out of 8 total proposals in the drawing
+
+Funded the following projects
+Fund "B" for $1 bringing its project's annual total to $1.
+Fund "C" for $1 bringing its project's annual total to $1.
+Fund "D" for $0.5 bringing its project's annual total to $0.5.
+Fund "E" for $1.5 bringing its project's annual total to $1.5.
+Fund "F" for $0.25 bringing its project's annual total to $0.25.
+""")
 
 
 def test_select_proposals_more_than_funds_eqweight_zero(capfd):
@@ -219,40 +217,39 @@ def test_select_proposals_more_than_funds_eqweight_zero(capfd):
     # Reset output.
     capfd.readouterr()
 
-    expected_result = {'A', 'C', 'D', 'F', 'G', 'H'}
-    expected_captured = (
-        "Inputs:\n"
-        "Budget: $6\n"
-        "Per-project funding limit: $2\n"
-        "Proposals in the drawing:\n"
-        '"A" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"B" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"C" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"D" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"E" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"F" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"G" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"H" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        "\n"
-        "Random Outputs:\n"
-        "Allocated: $6 ($0 under budget)\n"
-        "6 proposals funded out of 8 total proposals in the drawing\n\n"
-        "Funded the following projects\n"
-        'Fund "A" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "C" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "D" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "F" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "G" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "H" for $1 bringing its project\'s annual total to $1.\n'
-    )
     result = select_proposals_to_fund(budget,
                                       funding_limit,
                                       proposals,
                                       seed=2025)
     captured = capfd.readouterr()
 
-    assert set(result) == expected_result
-    assert captured.out == expected_captured
+    assert set(result) == snapshot({'A','C','E','F','G','H'})
+    assert captured.out == snapshot("""\
+Inputs:
+Budget: $6
+Per-project funding limit: $2
+Proposals in the drawing:
+"A" requests $1 and is proposed by a project that has previously received $0 this year.
+"B" requests $1 and is proposed by a project that has previously received $0 this year.
+"C" requests $1 and is proposed by a project that has previously received $0 this year.
+"D" requests $1 and is proposed by a project that has previously received $0 this year.
+"E" requests $1 and is proposed by a project that has previously received $0 this year.
+"F" requests $1 and is proposed by a project that has previously received $0 this year.
+"G" requests $1 and is proposed by a project that has previously received $0 this year.
+"H" requests $1 and is proposed by a project that has previously received $0 this year.
+
+Random Outputs:
+Allocated: $6 ($0 under budget)
+6 proposals funded out of 8 total proposals in the drawing
+
+Funded the following projects
+Fund "A" for $1 bringing its project's annual total to $1.
+Fund "C" for $1 bringing its project's annual total to $1.
+Fund "E" for $1 bringing its project's annual total to $1.
+Fund "F" for $1 bringing its project's annual total to $1.
+Fund "G" for $1 bringing its project's annual total to $1.
+Fund "H" for $1 bringing its project's annual total to $1.
+""")
 
 
 def test_select_proposals_more_than_funds_eqweight_under(capfd):
@@ -273,39 +270,38 @@ def test_select_proposals_more_than_funds_eqweight_under(capfd):
     # Reset output.
     capfd.readouterr()
 
-    expected_result = {'A', 'C', 'D', 'G', 'H'}
-    expected_captured = (
-        "Inputs:\n"
-        "Budget: $5.4\n"
-        "Per-project funding limit: $2\n"
-        "Proposals in the drawing:\n"
-        '"A" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"B" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"C" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"D" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"E" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"F" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"G" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"H" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        "\n"
-        "Random Outputs:\n"
-        "Allocated: $5.0 ($0.4 under budget)\n"
-        "5 proposals funded out of 8 total proposals in the drawing\n\n"
-        "Funded the following projects\n"
-        'Fund "A" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "C" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "D" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "G" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "H" for $1 bringing its project\'s annual total to $1.\n'
-    )
     result = select_proposals_to_fund(budget,
                                       funding_limit,
                                       proposals,
                                       seed=2025)
     captured = capfd.readouterr()
 
-    assert set(result) == expected_result
-    assert captured.out == expected_captured
+    assert set(result) == snapshot({'C','E','F','G','H'})
+    assert captured.out == snapshot("""\
+Inputs:
+Budget: $5.4
+Per-project funding limit: $2
+Proposals in the drawing:
+"A" requests $1 and is proposed by a project that has previously received $0 this year.
+"B" requests $1 and is proposed by a project that has previously received $0 this year.
+"C" requests $1 and is proposed by a project that has previously received $0 this year.
+"D" requests $1 and is proposed by a project that has previously received $0 this year.
+"E" requests $1 and is proposed by a project that has previously received $0 this year.
+"F" requests $1 and is proposed by a project that has previously received $0 this year.
+"G" requests $1 and is proposed by a project that has previously received $0 this year.
+"H" requests $1 and is proposed by a project that has previously received $0 this year.
+
+Random Outputs:
+Allocated: $5.0 ($0.4 under budget)
+5 proposals funded out of 8 total proposals in the drawing
+
+Funded the following projects
+Fund "C" for $1 bringing its project's annual total to $1.
+Fund "E" for $1 bringing its project's annual total to $1.
+Fund "F" for $1 bringing its project's annual total to $1.
+Fund "G" for $1 bringing its project's annual total to $1.
+Fund "H" for $1 bringing its project's annual total to $1.
+""")
 
 
 def test_select_proposals_more_than_funds_eqweight_over(capfd):
@@ -322,38 +318,37 @@ def test_select_proposals_more_than_funds_eqweight_over(capfd):
         ("H", 1, 0),
     ]
 
-    expected_result = {"A", "B", "C", "D", "F", "H", "G"}
-    expected_captured = (
-        "Inputs:\n"
-        "Budget: $6.6\n"
-        "Per-project funding limit: $2\n"
-        "Proposals in the drawing:\n"
-        '"A" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"B" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"C" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"D" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"E" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"F" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"G" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        '"H" requests $1 and is proposed by a project that has previously received $0 this year.\n'
-        "\n"
-        "Random Outputs:\n"
-        "Allocated: $7.0 ($0.4 over budget)\n"
-        "7 proposals funded out of 8 total proposals in the drawing\n\n"
-        "Funded the following projects\n"
-        'Fund "A" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "B" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "C" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "D" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "F" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "G" for $1 bringing its project\'s annual total to $1.\n'
-        'Fund "H" for $1 bringing its project\'s annual total to $1.\n'
-    )
     result = select_proposals_to_fund(budget,
                                       funding_limit,
                                       proposals,
                                       seed=2025)
     captured = capfd.readouterr()
 
-    assert set(result) == expected_result
-    assert captured.out == expected_captured
+    assert set(result) == snapshot({'A','B','C','E','F','G','H'})
+    assert captured.out == snapshot("""\
+Inputs:
+Budget: $6.6
+Per-project funding limit: $2
+Proposals in the drawing:
+"A" requests $1 and is proposed by a project that has previously received $0 this year.
+"B" requests $1 and is proposed by a project that has previously received $0 this year.
+"C" requests $1 and is proposed by a project that has previously received $0 this year.
+"D" requests $1 and is proposed by a project that has previously received $0 this year.
+"E" requests $1 and is proposed by a project that has previously received $0 this year.
+"F" requests $1 and is proposed by a project that has previously received $0 this year.
+"G" requests $1 and is proposed by a project that has previously received $0 this year.
+"H" requests $1 and is proposed by a project that has previously received $0 this year.
+
+Random Outputs:
+Allocated: $7.0 ($0.4 over budget)
+7 proposals funded out of 8 total proposals in the drawing
+
+Funded the following projects
+Fund "A" for $1 bringing its project's annual total to $1.
+Fund "B" for $1 bringing its project's annual total to $1.
+Fund "C" for $1 bringing its project's annual total to $1.
+Fund "E" for $1 bringing its project's annual total to $1.
+Fund "F" for $1 bringing its project's annual total to $1.
+Fund "G" for $1 bringing its project's annual total to $1.
+Fund "H" for $1 bringing its project's annual total to $1.
+""")
