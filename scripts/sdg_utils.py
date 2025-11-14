@@ -60,7 +60,7 @@ def parse_issue(issue):
     if url := re.search(r"\[(.*)\]\(.*\)", project_name):
         project_name = url.group(1)
 
-    amount_match = re.search(r"(?i)Amount requested\s*(\(USD\))\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
+    amount_match = re.search(r"(?i)Amount requested\s*(\(USD\))?\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
     funded_amount = 0
     try:
         amount_requested = int(re.sub(r"[^\d]", "", amount_match.group(2)))
