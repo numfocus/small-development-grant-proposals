@@ -1,0 +1,2 @@
+[tool.inline-snapshot]
+test-dir = "scripts"
