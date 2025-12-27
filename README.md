@@ -36,7 +36,7 @@ Project proposals will be received as issues. These issues will be originally la
 
 The proposals received will be distributed across the SDG committee. They will review the proposals and check for appropriateness. They may ask for clarification on the issue if required. If the proposal is not considered appropriate, they will be labelled as `non-appropriate` and closed as `rejected`. Between all the appropriate proposals, the SDG committee will select one proposal that will be awarded directly (labelled as `award`). The rest will be put in the randomisation script.
 
-The randomisation script will select projects till the funds are exhausted. The ones that hasn't been selected will be closed as `rejected`. All selected and awarded projects will be labelled as `funded`. Issues will be kept open to record the project progress and it will be closed as `completed` when the project is done.
+The randomisation script will select projects till the funds are exhausted. Those that haven’t been selected will be closedas `rejected`. All selected and awarded projects will be labelled as `funded`. Issues will be kept open to record the project progress and it will be closed as `completed` when the project is done.
 
 This flowchart explains the above in a graphical manner:
 
