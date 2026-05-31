@@ -11,7 +11,7 @@ GITHUB_REPO = os.getenv("GITHUB_REPOSITORY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/issues"
-HEADERS = {
+HHEADERS = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
     "Accept": "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
@@ -89,7 +89,7 @@ def combine_projects_rounds(issues_round, issues_prev):
 
 
 def update_board(issues_round, round):
-    GH_TOKEN = os.getenv("GH_TOKEN")
+    # GH_TOKEN = os.getenv("GH_TOKEN") # Rely on gh cli picking up GITHUB_TOKEN or GH_TOKEN env var
 
     ## Finding the project board id
     command = """
@@ -102,16 +102,14 @@ gh api graphql -f query='
     }
   }' -f organization=numfocus -F number=11
      """
-    ## PVT_kwDOABWvJs4A4B5H
     output = subprocess.run(shlex.split(command), capture_output=True)
     if output.returncode == 0:
         project_id = json.loads(output.stdout)["data"]["organization"]["projectV2"]["id"]
     else:
-        raise ValueError(output.stderr)
+        raise ValueError(f"Failed to fetch project ID: {output.stderr.decode()}")
 
-    ## Finding the ids for each field
-    ## from https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-api-to-manage-projects#finding-the-node-id-of-a-field)
-    command = """
+    ## Dynamically finding the ids for each field
+    get_fields_command = """
 gh api graphql -f query='
   query{{
   node(id: "{project_id}") {{
@@ -146,27 +144,14 @@ gh api graphql -f query='
   }}
 }}'
     """
-    # output = subprocess.run(shlex.split(command.format(project_id=project_id)), capture_output=True)
-    # if output.returncode == 0:
-    #     print(json.dumps(json.loads(output.stdout), indent=2))
-    # else:
-    #     raise ValueError(output.stderr)
-
-    ### Querying the issue independently to the repo produces a different id.
-    #     command = """
-    # gh api graphql -f query='query FindIssueID {{
-    #   repository(owner:"dpshelio", name:"sample-gh") {{
-    #     issue(number:3) {{
-    #       id
-    #     }}
-    #   }}
-    # }}'
-    # """
-    #     output = subprocess.run(shlex.split(command.format(project_id=project_id)), capture_output=True)
-    #     if output.returncode == 0:
-    #         print(json.dumps(json.loads(output.stdout), indent=2))
-    #     else:
-    #         raise ValueError(output.stderr)
+    output = subprocess.run(shlex.split(get_fields_command.format(project_id=project_id)), capture_output=True)
+    if output.returncode == 0:
+        fields_data = json.loads(output.stdout)["data"]["node"]["fields"]["nodes"]
+        field_ids = {}
+        for field in fields_data:
+            field_ids[field["name"]] = field["id"]
+    else:
+        raise ValueError(f"Failed to fetch project fields: {output.stderr.decode()}")
 
     ### Finding the issues IDs
     command = """
@@ -210,12 +195,11 @@ gh api graphql -f query='
             card["content"]["labels"] = labels
             card |= card["content"]
             del card["content"]
-        print(json.dumps(ids, indent=2))
     else:
-        raise ValueError(output.stderr)
+        raise ValueError(f"Failed to fetch project items: {output.stderr.decode()}")
 
     ### Updating an issue
-    command = """
+    update_field_command = """
 gh api graphql -f query='
   mutation {{
     updateProjectV2ItemFieldValue(
@@ -237,33 +221,44 @@ gh api graphql -f query='
 
     for issue in issues_round:
         issue_id = next(filter(lambda x: x["number"] == issue["issue_number"], ids))["id"]
-        fields = [
-            {  # $project
+        fields_to_update = [
+            {  # Project
+                "name": "Project",
                 "type": "text",
-                "fieldId": "PVTF_lADOABWvJs4A4B5HzgtERB4",
-                "value": f'"{issue["project_name"]}"',
+                "value_content": issue["project_name"],
             },
-            {  # $amount
+            {  # Amount
+                "name": "Amount",
                 "type": "number",
-                "fieldId": "PVTF_lADOABWvJs4A4B5HzgtEQ_c",
-                "value": issue["amount_requested"],
+                "value_content": issue["amount_requested"],
             },
-            {  # $previously_funded
+            {  # Previously Funded
+                "name": "Previously Funded",
                 "type": "number",
-                "fieldId": "PVTF_lADOABWvJs4A4B5Hzgu0-dU",
-                "value": issue["funded_amount"],
+                "value_content": issue["funded_amount"],
             },
-            {  # $SDG_reviewers
+            {  # SDG Reviewers
+                "name": "SDG Reviewers",
                 "type": "text",
-                "fieldId": "PVTF_lADOABWvJs4A4B5HzgtEQ-o",
-                "value": f'"{",".join(issue["reviewers"])}"',
+                "value_content": ",".join(issue["reviewers"]),
             },
         ]
-        for field in fields:
+        for field in fields_to_update:
+            field_id = field_ids.get(field["name"])
+            if not field_id:
+                raise ValueError(f"Field '{field['name']}' not found in project board.")
+
+            # Format value based on type for GraphQL literal
+            if field["type"] == "text":
+                formatted_value = f'"{field["value_content"]}"'
+            elif field["type"] == "number":
+                formatted_value = str(field["value_content"])
+            else:
+                raise ValueError(f"Unsupported field type: {field['type']}")
+
             output = subprocess.run(
-                shlex.split(command.format(project_id=project_id, issue_n=issue_id, **field)),
+                shlex.split(update_field_command.format(project_id=project_id, issue_n=issue_id, fieldId=field_id, type=field["type"], value=formatted_value)),
                 capture_output=True,
             )
             if output.returncode != 0:
-                raise ValueError(output.stderr)
-
+                raise ValueError(f"Failed to update field '{field['name']}' for issue {issue['issue_number']}: {output.stderr.decode()}")
