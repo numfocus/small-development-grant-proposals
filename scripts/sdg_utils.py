@@ -11,7 +11,7 @@ GITHUB_REPO = os.getenv("GITHUB_REPOSITORY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/issues"
-HEADERS = {
+HARDERS = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
     "Accept": "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
@@ -26,7 +26,7 @@ def get_all_issues():
     while True:
         response = requests.get(
             API_URL,
-            headers=HEADERS,
+            headers=HARDERS,
             params={"state": "open", "per_page": 100, "page": page},
         )
         if response.status_code != 200:
@@ -55,16 +55,18 @@ def parse_issue(issue):
     labels = [label["name"] for label in issue["labels"]]
 
     body = issue["body"]
-    project_match = re.search(r"(?i)Project\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
+    # Updated regex to explicitly handle markdown headers like # Project or ### Project
+    project_match = re.search(r"(?i)^#+\s*Project\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL | re.MULTILINE)
     project_name = project_match.group(1).strip() if project_match else ""
     if url := re.search(r"\[(.*)\]\(.*\)", project_name):
         project_name = url.group(1)
 
-    amount_match = re.search(r"(?i)Amount requested\s*(\(USD\))?\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
+    # Updated regex to explicitly handle markdown headers like # Amount requested or ### Amount requested
+    amount_match = re.search(r"(?i)^#+\s*Amount requested\s*(\(USD\))?\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL | re.MULTILINE)
     funded_amount = 0
     try:
         amount_requested = int(re.sub(r"[^\d]", "", amount_match.group(2)))
-    except ValueError:
+    except (ValueError, AttributeError): # Added AttributeError for when amount_match is None
         amount_requested = 0
     if "funded" in [l.lower() for l in labels] and amount_match:
         funded_amount = amount_requested
@@ -266,4 +268,3 @@ gh api graphql -f query='
             )
             if output.returncode != 0:
                 raise ValueError(output.stderr)
-
