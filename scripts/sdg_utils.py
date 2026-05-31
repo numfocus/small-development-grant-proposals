@@ -62,11 +62,15 @@ def parse_issue(issue):
 
     amount_match = re.search(r"(?i)Amount requested\s*(\(USD\))?\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
     funded_amount = 0
-    try:
-        amount_requested = int(re.sub(r"[^\d]", "", amount_match.group(2)))
-    except ValueError:
-        amount_requested = 0
-    if "funded" in [l.lower() for l in labels] and amount_match:
+    amount_requested = 0  # Initialize to 0
+    if amount_match:  # Check if amount_match was found
+        try:
+            amount_requested = int(re.sub(r"[^\d]", "", amount_match.group(2)))
+        except ValueError:
+            # If conversion to int fails, amount_requested remains 0
+            pass
+    
+    if "funded" in [l.lower() for l in labels]:
         funded_amount = amount_requested
 
     return {
@@ -89,7 +93,7 @@ def combine_projects_rounds(issues_round, issues_prev):
 
 
 def update_board(issues_round, round):
-    GH_TOKEN = os.getenv("GH_TOKEN")
+    GH_TOKEN = os.getenv("GITHUB_TOKEN") # Use GITHUB_TOKEN for consistency
 
     ## Finding the project board id
     command = """
@@ -266,4 +270,3 @@ gh api graphql -f query='
             )
             if output.returncode != 0:
                 raise ValueError(output.stderr)
-
