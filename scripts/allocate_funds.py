@@ -31,7 +31,7 @@ def main():
     parser = ArgumentParser(description="Check for SDG proposals from same project")
     parser.add_argument("round", type=int, help="round number to be extracted")
     parser.add_argument("--budget", type=int, help="total number of budget allowed")
-    parser.add_argument("--funding_limit", type=int, default="10000", help="funding limit per year")
+    parser.add_argument("--funding_limit", type=int, default=10000, help="funding limit per year")
     arguments = parser.parse_args()
 
     issues = get_all_issues()

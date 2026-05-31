@@ -52,7 +52,9 @@ def parse_issue(issue):
         return None
 
     year, round_number = label_info.groups()
-    labels = [label["name"] for label in issue["labels"]]
+    
+    # Create a set of lowercased labels for efficient lookup
+    lower_labels = {label["name"].lower() for label in issue["labels"]}
 
     body = issue["body"]
     project_match = re.search(r"(?i)Project\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
@@ -61,16 +63,22 @@ def parse_issue(issue):
         project_name = url.group(1)
 
     amount_match = re.search(r"(?i)Amount requested\s*(\(USD\))?\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
+    amount_requested = 0 # Initialize to 0
     funded_amount = 0
-    try:
-        amount_requested = int(re.sub(r"[^\d]", "", amount_match.group(2)))
-    except ValueError:
-        amount_requested = 0
-    if "funded" in [l.lower() for l in labels] and amount_match:
+
+    if amount_match: # Check if match exists before accessing groups
+        try:
+            amount_requested = int(re.sub(r"[^\d]", "", amount_match.group(2)))
+        except ValueError:
+            # If conversion to int fails, amount_requested remains 0
+            pass
+    
+    # Determine funded_amount based on the 'funded' label and the (potentially 0) amount_requested
+    if "funded" in lower_labels:
         funded_amount = amount_requested
 
     return {
-        "awarded": "award" in [l.lower() for l in labels],
+        "awarded": "award" in lower_labels,
         "year": int(year),
         "round_number": int(round_number),
         "funded_amount": funded_amount,
@@ -232,7 +240,8 @@ gh api graphql -f query='
         id
       }}
     }}
-  }}'
+  }}
+'
 """
 
     for issue in issues_round:
@@ -266,4 +275,3 @@ gh api graphql -f query='
             )
             if output.returncode != 0:
                 raise ValueError(output.stderr)
-
