@@ -37,9 +37,9 @@ def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
         raise ValueError("Proposal names are not unique")
 
     funded = []
-    budget_remaining = budget
-    temp_budget_remaining = budget + 0
-    while budget_remaining > 0 and len(funded) < len(proposals):
+    current_budget = budget # Use a single variable for tracking the budget
+
+    while current_budget > 0 and len(funded) < len(proposals):
         total_weight = sum(weights)
         if total_weight == 0:
             # When all the proposals have been evaluated and there's still budget
@@ -48,10 +48,13 @@ def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
         weights[i] = 0
         proposal = proposals[i]
         proposal_budget = proposal[1]
-        temp_budget_remaining -= proposal_budget
-        if temp_budget_remaining > -proposal_budget / 2:
+        
+        # This condition allows for some overspending, as per existing tests.
+        # It funds the proposal if the remaining budget covers it, or if the overspend
+        # is less than half the proposal's budget.
+        if current_budget - proposal_budget > -proposal_budget / 2:
             funded.append(proposal)
-            budget_remaining = temp_budget_remaining
+            current_budget -= proposal_budget
 
     print("Inputs:")
     print(f"Budget: ${budget}")
@@ -65,7 +68,7 @@ def select_proposals_to_fund(budget, funding_limit, proposals, seed=None):
     print()
     print("Random Outputs:")
     print(
-        f"Allocated: ${round(budget - budget_remaining, 2)} (${round(abs(budget_remaining), 2)} {'over' if budget_remaining < 0 else 'under'} budget)"
+        f"Allocated: ${round(budget - current_budget, 2)} (${round(abs(current_budget), 2)} {'over' if current_budget < 0 else 'under'} budget)"
     )
     print(f"{len(funded)} proposals funded out of {len(proposals)} total proposals in the drawing")
     print()
